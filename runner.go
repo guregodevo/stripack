@@ -32,6 +32,8 @@ type Algorithm interface {
 	//Input : The rectangles to be packed n and the strip width W .
 	//Ouput : The height H of the packing obtained in the strip.
 	Pack(W int, rects []*Rect) int 
+
+	PrettyPrint(W,H int)
 }
 
 // Returns uncovered area.

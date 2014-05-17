@@ -7,8 +7,8 @@ import (
 )
 
 type SasAlgo struct {
-	nRects *DescHRect //narrow rects
-	wRects *DescWRect //wide rects
+	nRects *NarrowRectHeap //narrow rects
+	wRects *WideRectHeap //wide rects
 	packedRects []*Rect
 	h map[int]int
 	level int
@@ -43,9 +43,9 @@ func (algo *SasAlgo) PrettyPrint(W int, H int) {
 //Partition the list of rectangles L = L1 ∪ L2 such that L1 is a list
 //with h(Li ) > w(Li ) for all 1 ≤ i ≤ n1 ,
 //while L2 is a list with w(Lj ) ≥ h(Lj ) for all 1 ≤ j ≤ n2 
-func partition(rects []*Rect) (l1 *DescHRect,l2 *DescWRect) {
-	l1 = &DescHRect{}
-	l2 = &DescWRect{}
+func partition(rects []*Rect) (l1 *NarrowRectHeap,l2 *WideRectHeap) {
+	l1 = &NarrowRectHeap{}
+	l2 = &WideRectHeap{}
 	heap.Init(l1)
 	heap.Init(l2)
 	for i := 0; i < len(rects); i++ {

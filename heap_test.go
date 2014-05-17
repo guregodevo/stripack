@@ -6,12 +6,12 @@ import (
 	"testing"	
 )
 
-func Test_H_Heap(t *testing.T) {
+func Test_Narrow_Rect_Heap(t *testing.T) {
 	square := &Rect{ id:1, H:1, W:2}
 	rect := &Rect{ id:2, H:2, W:2}
 	vrect := &Rect{ id:3, H:1, W:2}
 
-	l1 := &DescHRect{}
+	l1 := &NarrowRectHeap{}
 	heap.Init(l1)
 	heap.Push(l1,rect)
 	heap.Push(l1,square)
@@ -23,12 +23,12 @@ func Test_H_Heap(t *testing.T) {
 	expect(t, rect, s)
 }
 
-func Test_W_Heap(t *testing.T) {
+func Test_Wide_Rect_Heap(t *testing.T) {
 	square := &Rect{ H:1, W:2}
 	rect := &Rect{ H:1, W:5}
 	vrect := &Rect{ H:1, W:2}
 
-	l1 := &DescWRect{}
+	l1 := &WideRectHeap{}
 	heap.Init(l1)
 	heap.Push(l1,rect)
 	heap.Push(l1,square)
