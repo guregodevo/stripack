@@ -16,12 +16,9 @@ type SasAlgo struct {
 
 func (algo *SasAlgo) PrettyPrint(W int, H int) {
 	strip := Array(W,H)
-	//fmt.Printf("Printing W:%v,H:%v \n", W, H)
 	for _, rect := range algo.packedRects {
 		for w := rect.X; w < rect.X + rect.W; w++ {
-			//fmt.Printf("strip W:%v\n", w)
 			for h := rect.Y; h < rect.Y + rect.H; h++ {
-				//fmt.Printf("strip w:%v,h:%v \n", w, h)
 		    	strip[w][h] = rect.id 	 	
 			}
 		}			
@@ -110,8 +107,6 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 			v.packWideRects(frame)
 		} else {
 			//tallest rectangle is wide
-			//heap.Push(lj, rectj) //restore recti
-			//h(level + 1) ← h(level) + h(Lj );
 			v.h[v.level+1] = v.h[v.level] + rectWide.H
 
 			//Pack the selected rectangle on the level
@@ -144,7 +139,7 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 	log.Println("Pack wide rect")
 	leftspace := new(Rect)
 	leftspace.Y = outer.Y
-	leftspace.W = outer.W //to confirm. Condition for bottom-most wide
+	leftspace.W = outer.W
 	leftspace.X = outer.X
 	leftspace.H = outer.H
 
@@ -165,8 +160,8 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 				regionR := new(Rect)
 				regionR.X = wRect.X + wRect.W
 				regionR.Y = wRect.Y
-				regionR.W = lastPackedRect.W - wRect.W //To confirm 
-				regionR.H = v.h[v.level+1] - regionR.Y //To confirm 
+				regionR.W = lastPackedRect.W - wRect.W 
+				regionR.H = v.h[v.level+1] - regionR.Y 
 				log.Print("**RegionR:")
 				log.Print(regionR.String())
 				v.packNarrowRects(regionR)
@@ -197,7 +192,7 @@ func (v *SasAlgo) packNarrowRects(outer *Rect) {
 
 				leftspace := new(Rect)
 				leftspace.Y = lastRect.Y + lastRect.H
-				leftspace.W = lastRect.W //to confirm. Condition for bottom-most wide
+				leftspace.W = lastRect.W
 				leftspace.X = lastRect.X
 				leftspace.H = v.h[v.level+1] - (lastRect.H + lastRect.Y) 
 			

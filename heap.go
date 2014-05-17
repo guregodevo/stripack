@@ -2,9 +2,9 @@ package stripack
 
 
 func Array(dx, dy int) [][]int {
-    pic := make([][]int, dx) /* type declaration */
+    pic := make([][]int, dx) 
     for i := range pic {
-        pic[i] = make([]int, dy) /* again the type? */
+        pic[i] = make([]int, dy) 
         for j := range pic[i] {
             pic[i][j] = -1
         }
@@ -26,7 +26,6 @@ func (pq *NarrowRectHeap) Pop() interface{} {
     old := *pq
     n := len(old)
     item := old[n-1]
-    //item.index = -1 // for safety
     *pq = old[0 : n-1]
     return item
 }
@@ -45,7 +44,6 @@ func (pq *WideRectHeap) Pop() interface{} {
     old := *pq
     n := len(old)
     item := old[n-1]
-    //item.index = -1 // for safety
     *pq = old[0 : n-1]
     return item
 }
