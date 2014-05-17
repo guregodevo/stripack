@@ -2,8 +2,8 @@ package stripack
 
 
 import (
-	"fmt"
 	"container/heap"	
+	"log"
 )
 
 type SasAlgo struct {
@@ -16,13 +16,12 @@ type SasAlgo struct {
 
 func (algo *SasAlgo) PrettyPrint(W int, H int) {
 	strip := Array(W,H)
-	fmt.Printf("Printing W:%v,H:%v \n", W, H)
+	//fmt.Printf("Printing W:%v,H:%v \n", W, H)
 	for _, rect := range algo.packedRects {
-		print(rect.String())
 		for w := rect.X; w < rect.X + rect.W; w++ {
-			fmt.Printf("strip W:%v\n", w)
+			//fmt.Printf("strip W:%v\n", w)
 			for h := rect.Y; h < rect.Y + rect.H; h++ {
-				fmt.Printf("strip w:%v,h:%v \n", w, h)
+				//fmt.Printf("strip w:%v,h:%v \n", w, h)
 		    	strip[w][h] = rect.id 	 	
 			}
 		}			
@@ -63,9 +62,9 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 	n := len(rects)
 
 	v.nRects, v.wRects = partition(rects)
-	fmt.Printf("narrow rects:%v \n", v.nRects.Len())
-	fmt.Printf("wide rects:%v \n", v.wRects.Len())
-	fmt.Printf("Total rect:%v\n", n)
+	log.Printf("narrow rects:%v \n", v.nRects.Len())
+	log.Printf("wide rects:%v \n", v.wRects.Len())
+	log.Printf("Total rect:%v\n", n)
 
 	//v.nRects contains narrow rects
 	//v.wRects contains wide rects
@@ -94,7 +93,7 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 			//h(level + 1) ← h(level) + h(Li );
 			v.h[v.level+1] = v.h[v.level] + rectNarrow.H 
 
-			fmt.Printf("Pack first Narrow rect %v | level=%v \n", rectNarrow, v.level)
+			log.Printf("Pack first Narrow rect %v | level=%v \n", rectNarrow, v.level)
 			//Pack the selected rectangle on the level
 			v.packToRect(rectNarrow, 0, v.h[v.level])
 			frame := new(Rect)
@@ -106,8 +105,8 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 			if isWide {
 				heap.Push(v.wRects, rectWide) //restore rectWide
 			}
-			print("Frame:")
-			print(frame.String())
+			log.Print("Frame:")
+			log.Print(frame.String())
 			v.packWideRects(frame)
 		} else {
 			//tallest rectangle is wide
@@ -116,7 +115,7 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 			v.h[v.level+1] = v.h[v.level] + rectWide.H
 
 			//Pack the selected rectangle on the level
-			fmt.Printf("Pack first Wide rect %v | level=%v \n", rectWide, v.level)
+			log.Printf("Pack first Wide rect %v | level=%v \n", rectWide, v.level)
 			v.packToRect(rectWide, 0, v.h[v.level])
 			frame := new(Rect)
 			frame.X = rectWide.W
@@ -131,19 +130,18 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 		}
 		v.level = v.level + 1
 	}
-	return v.level
+	return v.h[v.level]
 }
 
 func (v *SasAlgo) packToRect(r *Rect, X int, Y int) {
 	r.X = X
 	r.Y = Y
-	fmt.Printf("Packed")
-	print(r.String())
+	log.Printf("Packed %v", r.String())
 	v.packedRects = append(v.packedRects, r)
 }
 
 func (v *SasAlgo) packWideRects(outer *Rect) {
-	println("Pack wide rect")
+	log.Println("Pack wide rect")
 	leftspace := new(Rect)
 	leftspace.Y = outer.Y
 	leftspace.W = outer.W //to confirm. Condition for bottom-most wide
@@ -160,17 +158,17 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 			if lastPackedRect != nil && lastPackedRect.W != wRect.W {
 				//region R is created 
 				//and narrow rectangles are packed in this region
-				print("**Actual Rect")
-				print(wRect.String())
-				print("**last Rect")
-				print(lastPackedRect.String())				
+				log.Print("**Actual Rect")
+				log.Print(wRect.String())
+				log.Print("**last Rect")
+				log.Print(lastPackedRect.String())				
 				regionR := new(Rect)
 				regionR.X = wRect.X + wRect.W
 				regionR.Y = wRect.Y
 				regionR.W = lastPackedRect.W - wRect.W //To confirm 
 				regionR.H = v.h[v.level+1] - regionR.Y //To confirm 
-				print("**RegionR:")
-				print(regionR.String())
+				log.Print("**RegionR:")
+				log.Print(regionR.String())
 				v.packNarrowRects(regionR)
 			}
 			lastPackedRect = wRect
@@ -183,7 +181,7 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 }
 
 func (v *SasAlgo) packNarrowRects(outer *Rect) {
-	println("Pack narrow rect")
+	log.Println("Pack narrow rect - level %v", v.level)
 	if outer.isEmpty() {
 		return
 	}

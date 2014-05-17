@@ -44,6 +44,6 @@ func Run(n int, W int) (uncovered_area int) {
 	fmt.Printf("Solution height = %v\nTotal area = %0.9v\n", H, total_area)
 	uncovered_area = H * W - total_area
 	fmt.Printf("Uncovered area = %0.9v\n", uncovered_area)
-	
+	algo.PrettyPrint(W,H)
 	return
 }

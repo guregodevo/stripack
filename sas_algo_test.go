@@ -12,11 +12,13 @@ func Test_Pack(t *testing.T) {
 	&Rect{id:1, H:1, W:1}, 
 	&Rect{id:7, H:2, W:4}, 
 	&Rect{id:6, H:1, W:1}, 
-	&Rect{id:8, H:2, W:1},
+	&Rect{id:8, H:1, W:2},
 	&Rect{id:9, H:3, W:1},
+	&Rect{id:3, H:3, W:3},
+	&Rect{id:4, H:4, W:2},	
 	}
 	algo := new(SasAlgo)
 
-    algo.Pack(5, rects)
-	algo.PrettyPrint(5,9)
+    height := algo.Pack(5, rects)
+    expect(t, 9, height)
 }

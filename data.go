@@ -1,37 +1,6 @@
 package stripack
 
 
-type IntSet struct {
-    set map[int]struct{}
-}
-
-func NewIntSet() *IntSet {
-    s := new(IntSet)
-    s.set = make(map[int]struct{})
-    return s
-}
-
-func (set *IntSet) Add(i int) bool {
-    _, found := set.set[i]
-    set.set[i] = struct{}{}
-    return !found 
-}
-
-func (set *IntSet) Diff(i int) bool {
-    for value, _ := range set.set {
-    	if value != i {
-    		return true
-		}
-	}
-    return true 
-}
-
-func (set *IntSet) Exists(i int) bool {
-    _, found := set.set[i]
-    return found 
-}
-
-
 func Array(dx, dy int) [][]int {
     pic := make([][]int, dx) /* type declaration */
     for i := range pic {
