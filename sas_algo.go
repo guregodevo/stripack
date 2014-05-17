@@ -125,7 +125,7 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 			frame.W = W - rectWide.W
 
 			if isNarrow {
-				heap.Push(v.nRects, rectNarrow) //restore rectWide
+				heap.Push(v.nRects, rectNarrow) //restore rectNarrow
 			}
 			v.packNarrowRects(frame)
 		}
@@ -135,15 +135,11 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 }
 
 func (v *SasAlgo) packToRect(r *Rect, X int, Y int) {
-	p := new(Rect)
-	p.id = r.id
-	p.H = r.H
-	p.W = r.W
-	p.X = X
-	p.Y = Y
+	r.X = X
+	r.Y = Y
 	fmt.Printf("Packed")
-	print(p.String())
-	v.packedRects = append(v.packedRects, p)
+	print(r.String())
+	v.packedRects = append(v.packedRects, r)
 }
 
 func (v *SasAlgo) packWideRects(outer *Rect) {
@@ -154,7 +150,6 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 	leftspace.X = outer.X
 	leftspace.H = outer.H
 
-	widths := NewIntSet()
 	var lastPackedRect *Rect
 	lastPackedRect = nil
 	for v.wRects.Len() > 0 {
@@ -162,19 +157,22 @@ func (v *SasAlgo) packWideRects(outer *Rect) {
 		if wRect.Packable(leftspace) {
 			v.packToRect(wRect, leftspace.X, leftspace.Y)
 			//if rectangles of unequal widths are stacked
-			if widths.Diff(wRect.W) && lastPackedRect != nil {
+			if lastPackedRect != nil && lastPackedRect.W != wRect.W {
 				//region R is created 
 				//and narrow rectangles are packed in this region
+				print("**Actual Rect")
+				print(wRect.String())
+				print("**last Rect")
+				print(lastPackedRect.String())				
 				regionR := new(Rect)
-				regionR.X = lastPackedRect.X + wRect.W
-				regionR.Y = lastPackedRect.Y + lastPackedRect.H + 1
+				regionR.X = wRect.X + wRect.W
+				regionR.Y = wRect.Y
 				regionR.W = lastPackedRect.W - wRect.W //To confirm 
-				regionR.H = leftspace.H - regionR.X  //To confirm 
-				print("RegionR:")
+				regionR.H = v.h[v.level+1] - regionR.Y //To confirm 
+				print("**RegionR:")
 				print(regionR.String())
 				v.packNarrowRects(regionR)
 			}
-			widths.Add(wRect.W)
 			lastPackedRect = wRect
 			leftspace.Y = leftspace.Y + wRect.H
 		} else {
@@ -195,17 +193,21 @@ func (v *SasAlgo) packNarrowRects(outer *Rect) {
 		if firstNRect.Packable(outer) {
 			//pack first narrow rectangle that fits height-wise and width-wise
 			v.packToRect(firstNRect, outer.X, outer.Y)
-			leftspace := new(Rect)
-			leftspace.Y = outer.Y + firstNRect.H
-			leftspace.W = firstNRect.W //to confirm. Condition for bottom-most wide
-			leftspace.X = outer.X
-			leftspace.H = outer.H
+			lastRect := firstNRect.clone()			
 			for v.nRects.Len() > 0 {
 				nRect := heap.Pop(v.nRects).(*Rect)
+
+				leftspace := new(Rect)
+				leftspace.Y = lastRect.Y + lastRect.H
+				leftspace.W = lastRect.W //to confirm. Condition for bottom-most wide
+				leftspace.X = lastRect.X
+				leftspace.H = v.h[v.level+1] - (lastRect.H + lastRect.Y) 
+			
 				//search L1 for rectangle whose width is at most the width of the bottom-most narrow
 				if nRect.Packable(leftspace) {
 					v.packToRect(nRect, leftspace.X, leftspace.Y)
-					leftspace.Y = leftspace.Y + nRect.H
+					leftspace.Y = lastRect.Y + lastRect.H
+					lastRect = nRect
 					//TODO shift to the right if there is no more space
 					if leftspace.Y >= v.h[v.level] {
 						leftspace.X = leftspace.X + nRect.W
