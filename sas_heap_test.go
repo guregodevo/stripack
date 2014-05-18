@@ -7,9 +7,9 @@ import (
 )
 
 func Test_Narrow_Rect_Heap(t *testing.T) {
-	square := &Rect{ id:1, H:1, W:2}
-	rect := &Rect{ id:2, H:2, W:2}
-	vrect := &Rect{ id:3, H:1, W:2}
+	square := &Rect{ Id:1, H:1, W:2}
+	rect := &Rect{ Id:2, H:2, W:2}
+	vrect := &Rect{ Id:3, H:1, W:2}
 
 	l1 := &NarrowRectHeap{}
 	heap.Init(l1)

@@ -6,7 +6,7 @@ import "math/rand"
 type Rect struct {
 	X, Y int
 	H, W int
-	id int
+	Id int
 }
 
 func (r *Rect) isEmpty() bool {
@@ -15,7 +15,7 @@ func (r *Rect) isEmpty() bool {
 
 func (r *Rect) clone() *Rect {
 	p := new(Rect)
-	p.id = r.id
+	p.Id = r.Id
 	p.H = r.H
 	p.W = r.W
 	p.X = r.X
@@ -24,7 +24,7 @@ func (r *Rect) clone() *Rect {
 } 
 
 func (r *Rect) String() string {
-	return fmt.Sprintf("id=%v,X=%v,Y=%v,H=%v,W=%v \n",r.id,r.X,r.Y,r.H,r.W)
+	return fmt.Sprintf("id=%v,X=%v,Y=%v,H=%v,W=%v \n",r.Id,r.X,r.Y,r.H,r.W)
 }
 
 // Returns whether inner fits for packing into outer and corresponding vertical 
@@ -39,7 +39,7 @@ func PrettyPrint(packedRects []*Rect, W int, H int) {
 	for _, rect := range packedRects {
 		for w := rect.X; w < rect.X + rect.W; w++ {
 			for h := rect.Y; h < rect.Y + rect.H; h++ {
-		    	strip[w][h] = rect.id 	 	
+		    	strip[w][h] = rect.Id 	 	
 			}
 		}			
 	}
@@ -64,7 +64,7 @@ func GenerateRectangles(n int) []*Rect {
 		res[y].W = rand.Int()
 		res[y].X = rand.Int()
 		res[y].Y = rand.Int()
-		res[y].id = rand.Int()
+		res[y].Id = rand.Int()
 	}
 	return res
 }
