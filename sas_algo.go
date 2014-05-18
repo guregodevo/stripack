@@ -14,28 +14,7 @@ type SasAlgo struct {
 	level int
 }
 
-func (algo *SasAlgo) PrettyPrint(W int, H int) {
-	strip := Array(W,H)
-	for _, rect := range algo.packedRects {
-		for w := rect.X; w < rect.X + rect.W; w++ {
-			for h := rect.Y; h < rect.Y + rect.H; h++ {
-		    	strip[w][h] = rect.id 	 	
-			}
-		}			
-	}
-	for h := H -1; h >= 0; h-- {
-		for w := 0; w < W; w++ {
-	    	print("|")
-	    	if strip[w][h] == -1 {
-	    		print("_")
-	    	} else {
-	    		print(strip[w][h])	
-	    	}
-	    	print("") 	 	
-		}
-		println("")
-	}
-}
+
 
 //Partition the list of rectangles L = L1 ∪ L2 such that L1 is a list
 //with h(Li ) > w(Li ) for all 1 ≤ i ≤ n1 ,
@@ -55,7 +34,7 @@ func partition(rects []*Rect) (l1 *NarrowRectHeap,l2 *WideRectHeap) {
 	return
 }
 
-func (v *SasAlgo) Pack(W int, rects []*Rect) int {
+func (v *SasAlgo) Pack(W int, rects []*Rect) (int,[]*Rect) {
 	n := len(rects)
 
 	v.nRects, v.wRects = partition(rects)
@@ -125,7 +104,7 @@ func (v *SasAlgo) Pack(W int, rects []*Rect) int {
 		}
 		v.level = v.level + 1
 	}
-	return v.h[v.level]
+	return v.h[v.level], v.packedRects
 }
 
 func (v *SasAlgo) packToRect(r *Rect, X int, Y int) {

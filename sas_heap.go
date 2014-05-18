@@ -1,17 +1,5 @@
 package stripack
 
-
-func Array(dx, dy int) [][]int {
-    pic := make([][]int, dx) 
-    for i := range pic {
-        pic[i] = make([]int, dy) 
-        for j := range pic[i] {
-            pic[i][j] = -1
-        }
-    }
-    return pic
-}
-
 type NarrowRectHeap []*Rect
 
 func (h NarrowRectHeap) Len() int           { return len(h) }

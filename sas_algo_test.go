@@ -5,7 +5,7 @@ import (
 )
 
 
-func Test_Pack(t *testing.T) {
+func Test_SAS_Offline_Pack(t *testing.T) {
 
 	rects := []*Rect{&Rect{id:5, H:5, W:1}, 
 	&Rect{id:2, H:1, W:2}, 
@@ -19,6 +19,7 @@ func Test_Pack(t *testing.T) {
 	}
 	algo := new(SasAlgo)
 
-    height := algo.Pack(5, rects)
+    height, rects := algo.Pack(5, rects)
     expect(t, 9, height)
+    expect(t, 9, len(rects))
 }
