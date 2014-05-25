@@ -6,7 +6,7 @@ import "math/rand"
 type Rect struct {
 	X, Y int
 	H, W int
-	Id int
+	Id int64
 }
 
 func (r *Rect) isEmpty() bool {
@@ -39,6 +39,10 @@ func PrettyPrint(packedRects []*Rect, W int, H int) {
 	for _, rect := range packedRects {
 		for w := rect.X; w < rect.X + rect.W; w++ {
 			for h := rect.Y; h < rect.Y + rect.H; h++ {
+		    	print("h:")
+		    	println(h)
+		    	print("w:")
+		    	println(w)
 		    	strip[w][h] = rect.Id 	 	
 			}
 		}			
@@ -64,7 +68,7 @@ func GenerateRectangles(n int) []*Rect {
 		res[y].W = rand.Int()
 		res[y].X = rand.Int()
 		res[y].Y = rand.Int()
-		res[y].Id = rand.Int()
+		res[y].Id = rand.Int63()
 	}
 	return res
 }

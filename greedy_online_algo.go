@@ -11,8 +11,12 @@ func (v *GreedyOnlineAlgo) Pack(H int, W int, packedRects []*Rect, rect *Rect) (
 	packedRect := rect.clone()
 	for _, r := range packedRects {
 		for x:= r.X; x < r.X + r.W; x++ {
-			for y:= r.Y; y < r.Y + r.H; y++ {
-				array[x][y] = 1 
+			if x < W {
+				for y:= r.Y; y < r.Y + r.H; y++ {
+					if y < H {
+						array[x][y] = 1 
+					}
+				}
 			}
 		}
 	}
@@ -21,7 +25,7 @@ func (v *GreedyOnlineAlgo) Pack(H int, W int, packedRects []*Rect, rect *Rect) (
 			isSpace := true 
 			for rectx:= x; rectx < x + rect.W; rectx++ {
 				for recty:= y; recty < y + rect.H; recty++ {
-					if array[rectx][recty] == 1 {
+					if rectx < W && recty < H && array[rectx][recty] == 1 {
 						isSpace = false
 						break
 					}
